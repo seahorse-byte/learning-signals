@@ -83,17 +83,74 @@ const button = (
 
 // function Counter(){
 //   const [count, setCount] = createSignal(0);
+//   console.log('Counter');
 
 //   const h1 = <h1>The count is {count()}</h1>;
 
 //   const button = (
 //     <button onClick={() => setCount(() => count() + 1)}>Click me</button>
 //   );
-//   return [h1, button]
+//   return [h1, button];
 // }
 
 document.body.textContent = '';
 document.body.append(h1, button);
 // document.body.append(...Counter());
 
-// render(Counter, document.body)
+// render(Counter, document.body);
+
+// things to mention
+// 1. counter is nothing special.
+// it wont re-render with console.log('Counter'). or setInterval(() => setCount(() => count() + 1), 1000); just the text node updates.
+// our component is just a fn that runs once - our compiler literally created just one effect around that count - that is all that is changing
+
+// ! -------------------------
+// ! 4. refactor to App()
+// ! -------------------------
+
+import { createSignal } from 'solid-js';
+import { render } from 'solid-js/web';
+
+function Counter() {
+  const [count, setCount] = createSignal(0);
+  console.log('Counter');
+
+  return (
+    <>
+      <h1>The count is {count()}</h1>
+      <button onClick={() => setCount(() => count() + 1)}>Click me</button>
+    </>
+  );
+}
+
+function App() {
+  return (
+    <>
+      <Counter />
+      <Counter />
+      <Counter />
+    </>
+  );
+}
+
+render(App, document.body);
+
+// things to mention:
+// move createSignal out - shared state or individual state super easy
+
+// maybe if time allows:
+
+// function Counter(props) {
+//   const [count, setCount] = createSignal(0);
+//   console.log("Counter");
+
+//   return (
+//     <>
+//       <h1>The count is {props.children}</h1>
+//       <button onClick={props.onClick}>Click me</button>
+//     </>
+//   );
+// }
+
+// <Counter onClick={() => setCount(() => count() + 1)}>{count()}</Counter>
+// <Counter onClick={() => setCount(() => count() + 2)}>{count() * 2}</Counter>
